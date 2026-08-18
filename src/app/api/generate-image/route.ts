@@ -56,17 +56,39 @@ function getGeminiErrorMessage(status: number, body: string): string {
   }
 }
 
-export async function POST(req: NextRequest): Promise<NextResponse<GenerateImageResponse>> {
-  const body: GenerateImageRequest = await req.json();
-  const { prompt, brokerPhotos = [], systemPrompt = "" } = body;
+async function generateWithImagen(apiKey: string, prompt: string, modelName: string) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:predict?key=${apiKey}`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      instances: [{ prompt }],
+      parameters: {
+        sampleCount: 1,
+        aspectRatio: "1:1",
+        outputOptions: { mimeType: "image/jpeg" },
+      },
+    }),
+  });
 
-  const apiKey = (process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY)?.trim();
-  if (!apiKey) {
-    return NextResponse.json({ mock: true, error: "GOOGLE_AI_API_KEY não configurada no .env.local" });
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(getGeminiErrorMessage(response.status, errText));
   }
 
-  const combinedSystem = [IMAGE_STYLE_SYSTEM, systemPrompt].filter(Boolean).join("\n\n");
+  const data = await response.json();
+  const bytes = data?.predictions?.[0]?.bytesBase64Encoded;
+  const mimeType = data?.predictions?.[0]?.mimeType ?? "image/jpeg";
 
+  if (!bytes) {
+    throw new Error("Nenhuma imagem gerada pelo Imagen 3");
+  }
+
+  return { imageData: bytes, mimeType };
+}
+
+async function generateWithGeminiMultimodal(apiKey: string, prompt: string, brokerPhotos: string[], systemPrompt: string, modelName: string) {
+  const combinedSystem = [IMAGE_STYLE_SYSTEM, systemPrompt].filter(Boolean).join("\n\n");
   const parts: object[] = [];
 
   for (const photo of brokerPhotos) {
@@ -81,13 +103,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<GenerateImage
 
   parts.push({ text: prompt });
 
-  const model = process.env.GEMINI_IMAGE_MODEL ?? "gemini-2.5-flash-image";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
   const requestBody = {
-    system_instruction: {
-      parts: [{ text: combinedSystem }],
-    },
+    system_instruction: { parts: [{ text: combinedSystem }] },
     contents: [{ role: "user", parts }],
     generationConfig: {
       responseModalities: ["TEXT", "IMAGE"],
@@ -95,33 +113,65 @@ export async function POST(req: NextRequest): Promise<NextResponse<GenerateImage
     },
   };
 
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
-    });
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestBody),
+  });
 
-    if (!response.ok) {
-      const err = await response.text();
-      throw new Error(getGeminiErrorMessage(response.status, err));
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(getGeminiErrorMessage(response.status, errText));
+  }
+
+  const data = await response.json();
+  const resParts = data?.candidates?.[0]?.content?.parts ?? [];
+
+  for (const part of resParts) {
+    if (part.inlineData?.data) {
+      return {
+        imageData: part.inlineData.data,
+        mimeType: part.inlineData.mimeType ?? "image/png",
+      };
     }
+  }
 
-    const data = await response.json();
-    const parts = data?.candidates?.[0]?.content?.parts ?? [];
+  throw new Error("Nenhuma imagem retornada no conteúdo gerado.");
+}
 
-    for (const part of parts) {
-      if (part.inlineData?.data) {
-        return NextResponse.json({
-          imageData: part.inlineData.data,
-          mimeType: part.inlineData.mimeType ?? "image/png",
-        });
+export async function POST(req: NextRequest): Promise<NextResponse<GenerateImageResponse>> {
+  const body: GenerateImageRequest = await req.json();
+  const { prompt, brokerPhotos = [], systemPrompt = "" } = body;
+
+  const apiKey = (process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY)?.trim();
+  if (!apiKey) {
+    return NextResponse.json({ mock: true, error: "GOOGLE_AI_API_KEY não configurada no .env.local" });
+  }
+
+  const configuredModel = process.env.GEMINI_IMAGE_MODEL?.trim() || "imagen-3.0-generate-002";
+
+  try {
+    if (configuredModel.includes("imagen")) {
+      try {
+        const result = await generateWithImagen(apiKey, prompt, configuredModel);
+        return NextResponse.json(result);
+      } catch (err) {
+        console.warn("Imagen 3 API fallback to Gemini Multimodal:", err);
+        const result = await generateWithGeminiMultimodal(apiKey, prompt, brokerPhotos, systemPrompt, "gemini-2.0-flash");
+        return NextResponse.json(result);
+      }
+    } else {
+      try {
+        const result = await generateWithGeminiMultimodal(apiKey, prompt, brokerPhotos, systemPrompt, configuredModel);
+        return NextResponse.json(result);
+      } catch (err) {
+        console.warn("Gemini Multimodal fallback to Imagen 3:", err);
+        const result = await generateWithImagen(apiKey, prompt, "imagen-3.0-generate-002");
+        return NextResponse.json(result);
       }
     }
-
-    throw new Error("Nenhuma imagem retornada pelo Gemini");
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Erro desconhecido";
+    const message = err instanceof Error ? err.message : "Erro desconhecido ao gerar imagem";
     return NextResponse.json({ error: message, mock: true });
   }
 }
