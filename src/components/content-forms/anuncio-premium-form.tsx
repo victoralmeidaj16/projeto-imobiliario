@@ -24,12 +24,12 @@ export function AnuncioPremiumForm({ onGenerate, isLoading, hasBrokerPhotos }: P
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const prompt = `Gere uma legenda de vendas premium e engajadora para o Instagram acompanhando o anúncio imobiliário da construtora "${form.construtora || "AB INVEST"}".
+    const prompt = `Gere uma legenda de vendas premium e engajadora para o Instagram acompanhando o anúncio imobiliário da construtora "${form.construtora || "Exemplo"}".
     
 Título do Anúncio: ${form.frase2} - ${form.frase3}
 Detalhes adicionados: ${form.frase4}
-Contato: ${form.telefone || "+91-8088 900 660"}
-Website: ${form.website || "www.abinvest.com"}
+Contato: ${form.telefone || "+55 47 99999-9999"}
+Website: ${form.website || "www.exemplo.com"}
 
 O texto deve:
 1. Começar com um gancho forte de alto padrão
@@ -54,7 +54,7 @@ Retorne JSON com 'content' (a legenda para o Instagram) e 'suggestions' (5 dicas
             type="text"
             value={form.construtora}
             onChange={(e) => setForm({ ...form, construtora: e.target.value })}
-            placeholder="Ex: AB INVEST"
+            placeholder="Ex: Construtora Exemplo"
             className="w-full bg-white/3 border border-accent/20 rounded-lg px-3 py-2.5 text-sm text-text-primary placeholder:text-muted/30 focus:outline-none focus:border-accent/50 transition-colors"
             required
           />

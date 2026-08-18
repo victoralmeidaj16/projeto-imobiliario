@@ -39,7 +39,7 @@ export default function TreinamentosPage() {
             Treinamentos &amp; Documentos
           </h1>
           <p className="text-xs text-muted font-light tracking-wider">
-            Sua formação contínua como corretor AB INVEST
+            Sua formação contínua de alto padrão
           </p>
           <div className="mt-6 h-px bg-gradient-to-r from-accent/20 via-accent/10 to-transparent" />
         </div>

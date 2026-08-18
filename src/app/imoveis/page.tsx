@@ -287,7 +287,7 @@ export default function ImoveisPage() {
               Imóveis Disponíveis
             </h1>
             <p className="text-xs text-muted font-light tracking-wider">
-              {filtered.length} imóveis no portfólio AB INVEST
+              {filtered.length} imóveis no portfólio
             </p>
           </div>
 

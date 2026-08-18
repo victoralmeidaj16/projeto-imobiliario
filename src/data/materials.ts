@@ -28,7 +28,7 @@ export const materials: Material[] = [
   },
   {
     id: 3,
-    title: "Story Exclusividade Casal Corretor",
+    title: "Story Exclusividade",
     type: "arte",
     subtitle: "1080 × 1920px",
     size: "3.1 MB",
@@ -114,7 +114,7 @@ export const materials: Material[] = [
   },
   {
     id: 14,
-    title: "Portfolio Casal Corretor 2024",
+    title: "Portfólio de Imóveis 2024",
     type: "apresentacao",
     subtitle: "PDF • 48 slides",
     size: "22 MB",

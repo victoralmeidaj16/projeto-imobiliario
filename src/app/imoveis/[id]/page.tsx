@@ -154,7 +154,7 @@ export default function PropertyDetailPage() {
                   <span className="font-light">{property.location}</span>
                 </div>
                 <p className="text-sm text-muted/80 font-light leading-relaxed">
-                  Esta residência exclusiva faz parte do seleto portfólio da AB Invest Group. O projeto arquitetônico prioriza a integração espacial, iluminação natural exuberante e acabamentos nobres com materiais selecionados, oferecendo a máxima sofisticação no mercado de alto padrão.
+                  Esta residência exclusiva faz parte do seleto portfólio. O projeto arquitetônico prioriza a integração espacial, iluminação natural exuberante e acabamentos nobres com materiais selecionados, oferecendo a máxima sofisticação no mercado de alto padrão.
                 </p>
               </div>
 
@@ -214,11 +214,11 @@ export default function PropertyDetailPage() {
 
                 <div className="pt-4 border-t border-accent/10 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-accent/15 border border-accent/30 flex items-center justify-center">
-                    <span className="text-accent text-xs font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>AB</span>
+                    <span className="text-accent text-xs font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>SC</span>
                   </div>
                   <div>
                     <span className="block text-[8px] uppercase tracking-widest text-muted/60">Suporte Comercial</span>
-                    <span className="text-xs font-medium text-text-primary">AB Invest Group</span>
+                    <span className="text-xs font-medium text-text-primary">Suporte Comercial</span>
                   </div>
                 </div>
               </div>

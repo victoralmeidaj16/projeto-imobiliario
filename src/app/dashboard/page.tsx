@@ -17,7 +17,7 @@ const announcements = [
   {
     id: 2,
     title: "Reunião de equipe – 25 de Janeiro",
-    body: "Reunião mensal obrigatória para corretores associados. Local: Sede Casal Corretor. Confirmem presença até 22/01.",
+    body: "Reunião mensal obrigatória para corretores associados. Local: Sede Principal. Confirmem presença até 22/01.",
     date: "18 Jan 2024",
     tag: "EVENTO",
   },
@@ -49,7 +49,7 @@ export default function DashboardPage() {
           {/* Top row */}
           <div className="flex items-start justify-between">
             <p className="text-[9px] font-semibold tracking-[0.4em] text-[#C9974D]/60 uppercase">
-              Área do Corretor &nbsp;/&nbsp; CASAL CORRETOR
+              Área do Corretor &nbsp;/&nbsp; PAINEL DO CORRETOR
             </p>
             <div className="flex items-center gap-2">
               <span className="text-[9px] font-semibold tracking-[0.3em] text-muted/40 uppercase">
@@ -106,7 +106,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="px-8 py-10">
-      {/* About AB Invest */}
+      {/* About Section */}
       <section className="mb-10 border-y border-accent/10 bg-[#0b0b0b] px-8 py-8">
         <div className="max-w-5xl">
           <p className="text-[9px] font-semibold tracking-[0.3em] text-accent/70 uppercase mb-2">
@@ -116,7 +116,7 @@ export default function DashboardPage() {
             className="text-3xl font-light text-text-primary mb-5"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
-            Sobre o Casal Corretor
+            Sobre o Portal
           </h2>
           <div className="grid gap-4 text-sm font-light leading-7 text-muted/75 md:grid-cols-2">
             <p>

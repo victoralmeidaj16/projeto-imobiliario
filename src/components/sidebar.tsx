@@ -61,11 +61,8 @@ export function Sidebar({ onHide }: { onHide?: () => void }) {
           </button>
         )}
         <h2 className="text-2xl font-light tracking-widest text-text-primary mt-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-          CASAL CORRETOR
+          PAINEL DO CORRETOR
         </h2>
-        <p className="text-[9px] font-medium tracking-[0.3em] text-accent uppercase mt-1">
-          Portal do Corretor
-        </p>
       </div>
 
       {/* Navigation */}

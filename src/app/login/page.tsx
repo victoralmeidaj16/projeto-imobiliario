@@ -84,11 +84,8 @@ export default function LoginPage() {
               className="text-4xl font-light tracking-widest text-text-primary uppercase"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              CASAL CORRETOR
+              PAINEL DO CORRETOR
             </h1>
-            <p className="mt-2 text-[10px] font-medium tracking-[0.35em] text-accent uppercase">
-              Portal do Corretor
-            </p>
             <p className="mt-3 text-xs text-muted font-light tracking-wider">
               {isSignup ? "Criar novo acesso para corretor" : "Área exclusiva para corretores"}
             </p>
@@ -191,7 +188,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="text-center text-[10px] text-muted/30 mt-6 tracking-wider">
-          © 2024 CASAL CORRETOR · Todos os direitos reservados
+          © 2024 PAINEL DO CORRETOR · Todos os direitos reservados
         </p>
       </div>
     </main>

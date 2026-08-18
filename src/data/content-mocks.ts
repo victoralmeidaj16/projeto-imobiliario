@@ -329,7 +329,7 @@ Me chame no direct. Vamos conversar sobre o seu imóvel.
   "anuncio-premium": {
     content: `💎 ANÚNCIO PREMIUM - LANÇAMENTO EXCLUSIVO
 
-A excelência construtiva encontra o design de ponta. Apresentamos uma obra-prima de arquitetura contemporânea assinada pela AB INVEST.
+A excelência construtiva encontra o design de ponta. Apresentamos uma obra-prima de arquitetura contemporânea.
 
 Uma composição simétrica e minimalista de concreto branco, painéis de madeira calorosos e esquadrias metálicas escuras. Fachada com imponentes janelas de vidro do piso ao teto, capturando a luz natural do amanhecer ao pôr do sol.
 

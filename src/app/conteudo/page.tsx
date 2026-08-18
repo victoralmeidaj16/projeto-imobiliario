@@ -73,13 +73,13 @@ function buildImagePrompt(
 
   if (contentType === "anuncio-premium") {
     const fd = formData || {};
-    const construtora = (fd.construtora as string) || "AB INVEST";
+    const construtora = (fd.construtora as string) || "Construtora Exemplo";
     const fraseTop = (fd.fraseTop as string) || "CONSTRUTORA DE ALTO PADRÃO";
     const frase2 = (fd.frase2 as string) || "SEU NOVO LAR DE LUXO";
     const frase3 = (fd.frase3 as string) || "OBRA EXCLUSIVA FRENTE AO MAR";
     const frase4 = (fd.frase4 as string) || "Viva a experiência única de morar no melhor endereço da cidade com acabamentos italianos e automação total.";
-    const telefone = (fd.telefone as string) || "+91-8088 900 660";
-    const website = (fd.website as string) || "www.abinvest.com";
+    const telefone = (fd.telefone as string) || "+55 47 99999-9999";
+    const website = (fd.website as string) || "www.exemplo.com";
     const incluirCorretor = fd.incluirCorretor as boolean;
 
     const brokerIntegrationPrompt = incluirCorretor

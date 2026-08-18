@@ -149,7 +149,7 @@ export default function MaterialDetailPage() {
                   {material.title}
                 </h1>
                 <p className="text-xs text-muted font-light leading-relaxed">
-                  Material exclusivo da AB Invest Group criado para alavancar a atração de clientes qualificados.
+                  Material exclusivo criado para alavancar a atração de clientes qualificados.
                 </p>
               </div>
 

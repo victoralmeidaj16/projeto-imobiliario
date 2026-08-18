@@ -19,7 +19,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Casal Corretor - Portal do Corretor",
+  title: "Painel do Corretor",
   description: "Área exclusiva para corretores associados",
 };
 
