@@ -19,9 +19,9 @@ export interface Document {
 export const trainingModules: TrainingModule[] = [
   {
     id: 1,
-    title: "Manual do Corretor AB INVEST",
+    title: "Manual do Corretor",
     description:
-      "Guia completo com processos, padrões de atendimento e valores da marca AB INVEST para corretores associados.",
+      "Guia completo com processos, padrões de atendimento e valores para corretores associados.",
     progress: 100,
     lessons: 12,
     duration: "4h 30min",

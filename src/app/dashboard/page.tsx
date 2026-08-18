@@ -17,7 +17,7 @@ const announcements = [
   {
     id: 2,
     title: "Reunião de equipe – 25 de Janeiro",
-    body: "Reunião mensal obrigatória para corretores associados. Local: Sede AB INVEST, Balneário Camboriú. Confirmem presença até 22/01.",
+    body: "Reunião mensal obrigatória para corretores associados. Local: Sede Casal Corretor. Confirmem presença até 22/01.",
     date: "18 Jan 2024",
     tag: "EVENTO",
   },
@@ -32,8 +32,8 @@ export default function DashboardPage() {
       {/* Photo Hero */}
       <div className="relative h-[480px] overflow-hidden">
         <Image
-          src="/MuriloEariHero.png"
-          alt="Murilo e Ariane — AB Invest Group"
+          src="/luxury_real_estate_hero.jpg"
+          alt="Luxury Real Estate"
           fill
           className="object-cover object-top -translate-y-[10%] scale-[1.0]"
           priority
@@ -49,7 +49,7 @@ export default function DashboardPage() {
           {/* Top row */}
           <div className="flex items-start justify-between">
             <p className="text-[9px] font-semibold tracking-[0.4em] text-[#C9974D]/60 uppercase">
-              Área do Corretor &nbsp;/&nbsp; AB INVEST
+              Área do Corretor &nbsp;/&nbsp; CASAL CORRETOR
             </p>
             <div className="flex items-center gap-2">
               <span className="text-[9px] font-semibold tracking-[0.3em] text-muted/40 uppercase">
@@ -116,7 +116,7 @@ export default function DashboardPage() {
             className="text-3xl font-light text-text-primary mb-5"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
-            Sobre a AB Invest
+            Sobre o Casal Corretor
           </h2>
           <div className="grid gap-4 text-sm font-light leading-7 text-muted/75 md:grid-cols-2">
             <p>
@@ -126,7 +126,7 @@ export default function DashboardPage() {
               Sempre acreditamos que resultado sustentável nasce da ética, do estudo constante e da dedicação em entregar segurança para cada cliente e investidor.
             </p>
             <p>
-              Ao longo da trajetória, criamos a AB INVEST GROUP, um ecossistema de negócios imobiliários especializado em alavancagem patrimonial através do mercado imobiliário, conectando investidores de mais de 6 países às oportunidades mais estratégicas de Itapema e Porto Belo, dois dos mercados imobiliários mais valorizados do Brasil.
+              Ao longo da trajetória, criamos um ecossistema de negócios imobiliários especializado em alavancagem patrimonial através do mercado imobiliário, conectando investidores de mais de 6 países às oportunidades mais estratégicas de Itapema e Porto Belo, dois dos mercados imobiliários mais valorizados do Brasil.
             </p>
             <p>
               Mais do que negociações milionárias, construímos confiança, autoridade e um legado que continua crescendo todos os dias.
@@ -141,7 +141,7 @@ export default function DashboardPage() {
           icon={Building2}
           label="Imóveis Disponíveis"
           value="12"
-          subtitle="Portfólio exclusivo AB INVEST"
+          subtitle="Portfólio exclusivo de imóveis"
         />
         <StatCard
           icon={FolderOpen}

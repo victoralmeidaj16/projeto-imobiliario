@@ -28,7 +28,7 @@ export const materials: Material[] = [
   },
   {
     id: 3,
-    title: "Story Exclusividade AB INVEST",
+    title: "Story Exclusividade Casal Corretor",
     type: "arte",
     subtitle: "1080 × 1920px",
     size: "3.1 MB",
@@ -84,7 +84,7 @@ export const materials: Material[] = [
   },
   {
     id: 10,
-    title: "Apresentação AB INVEST 2024",
+    title: "Apresentação Institucional 2024",
     type: "video",
     duration: "5:18",
     gradient: "from-[#05100a] to-[#050505]",
@@ -114,7 +114,7 @@ export const materials: Material[] = [
   },
   {
     id: 14,
-    title: "Portfolio AB INVEST 2024",
+    title: "Portfolio Casal Corretor 2024",
     type: "apresentacao",
     subtitle: "PDF • 48 slides",
     size: "22 MB",

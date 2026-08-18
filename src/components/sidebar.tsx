@@ -48,7 +48,7 @@ export function Sidebar({ onHide }: { onHide?: () => void }) {
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-[#0a0a0a] border-r border-accent/10 flex flex-col z-40">
       {/* Logo */}
-      <div className="px-6 py-6 border-b border-accent/10 relative">
+      <div className="px-6 py-6 border-b border-accent/10 relative text-center">
         {onHide && (
           <button
             type="button"
@@ -60,14 +60,12 @@ export function Sidebar({ onHide }: { onHide?: () => void }) {
             <PanelLeftClose size={17} strokeWidth={1.6} />
           </button>
         )}
-        <Image
-          src="/logo.jpg"
-          alt="AB Invest Group"
-          width={160}
-          height={160}
-          className="w-full max-w-[140px] mx-auto rounded-sm"
-          priority
-        />
+        <h2 className="text-2xl font-light tracking-widest text-text-primary mt-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          CASAL CORRETOR
+        </h2>
+        <p className="text-[9px] font-medium tracking-[0.3em] text-accent uppercase mt-1">
+          Portal do Corretor
+        </p>
       </div>
 
       {/* Navigation */}

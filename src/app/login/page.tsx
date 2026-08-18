@@ -81,16 +81,16 @@ export default function LoginPage() {
             </div>
 
             <h1
-              className="text-5xl font-light tracking-wide text-text-primary"
+              className="text-4xl font-light tracking-widest text-text-primary uppercase"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              AB INVEST
+              CASAL CORRETOR
             </h1>
             <p className="mt-2 text-[10px] font-medium tracking-[0.35em] text-accent uppercase">
-              Casal Corretor
+              Portal do Corretor
             </p>
             <p className="mt-3 text-xs text-muted font-light tracking-wider">
-              {isSignup ? "Criar novo acesso para corretor" : "Área exclusiva para corretores associados"}
+              {isSignup ? "Criar novo acesso para corretor" : "Área exclusiva para corretores"}
             </p>
 
             {/* Mode switch tabs */}
@@ -191,7 +191,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="text-center text-[10px] text-muted/30 mt-6 tracking-wider">
-          © 2024 AB INVEST · Todos os direitos reservados
+          © 2024 CASAL CORRETOR · Todos os direitos reservados
         </p>
       </div>
     </main>

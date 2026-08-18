@@ -19,8 +19,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "AB INVEST - Casal Corretor",
-  description: "Área exclusiva para corretores associados AB INVEST",
+  title: "Casal Corretor - Portal do Corretor",
+  description: "Área exclusiva para corretores associados",
 };
 
 export default function RootLayout({
