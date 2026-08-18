@@ -28,7 +28,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<GeneratedCont
   const body: GenerateContentRequest = await req.json();
   const { contentType, brokerPhotos = [], systemPrompt = "", brokerPresetId, prompt } = body;
 
-  const apiKey = process.env.GOOGLE_AI_API_KEY;
+  const apiKey = (process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY)?.trim();
   if (!apiKey) {
     return NextResponse.json(CONTENT_MOCKS[contentType] ?? CONTENT_MOCKS["showcase-imovel"]);
   }

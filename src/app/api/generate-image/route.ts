@@ -60,9 +60,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<GenerateImage
   const body: GenerateImageRequest = await req.json();
   const { prompt, brokerPhotos = [], systemPrompt = "" } = body;
 
-  const apiKey = process.env.GOOGLE_AI_API_KEY?.trim();
+  const apiKey = (process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY)?.trim();
   if (!apiKey) {
-    return NextResponse.json({ mock: true, error: "GOOGLE_AI_API_KEY não configurada" });
+    return NextResponse.json({ mock: true, error: "GOOGLE_AI_API_KEY não configurada no .env.local" });
   }
 
   const combinedSystem = [IMAGE_STYLE_SYSTEM, systemPrompt].filter(Boolean).join("\n\n");
