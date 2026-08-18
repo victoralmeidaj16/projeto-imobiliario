@@ -3,14 +3,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { user, loading: authLoading, login, signup } = useAuth();
+  const [isSignup, setIsSignup] = useState(false);
+  const [email, setEmail] = useState("123indizionhos@gmail.com");
+  const [password, setPassword] = useState("123indizionhos@gmail.com");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,28 +19,24 @@ export default function LoginPage() {
     }
   }, [user, authLoading, router]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password) {
+      setError("Preencha o e-mail e a senha.");
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      if (isSignup) {
+        await signup(email, password);
+      } else {
+        await login(email, password);
+      }
       router.push("/dashboard");
     } catch (err: any) {
-      console.error("Erro ao fazer login:", err);
-      let message = "Ocorreu um erro ao fazer login. Tente novamente.";
-      if (
-        err.code === "auth/invalid-credential" ||
-        err.code === "auth/user-not-found" ||
-        err.code === "auth/wrong-password"
-      ) {
-        message = "E-mail ou senha incorretos.";
-      } else if (err.code === "auth/invalid-email") {
-        message = "Formato de e-mail inválido.";
-      } else if (err.code === "auth/too-many-requests") {
-        message = "Muitas tentativas falhas. A conta foi temporariamente bloqueada.";
-      }
-      setError(message);
+      console.error("Erro na autenticação:", err);
+      setError(err.message || "Ocorreu um erro ao processar seu acesso. Tente novamente.");
       setLoading(false);
     }
   };
@@ -77,7 +72,7 @@ export default function LoginPage() {
         {/* Card */}
         <div className="bg-secondary border border-accent/20 rounded-2xl p-10 shadow-2xl shadow-black/50">
           {/* Logo area */}
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             {/* Gold line decoration above */}
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="flex-1 h-px bg-gradient-to-r from-transparent to-accent/50" />
@@ -95,19 +90,34 @@ export default function LoginPage() {
               Casal Corretor
             </p>
             <p className="mt-3 text-xs text-muted font-light tracking-wider">
-              Área exclusiva para corretores associados
+              {isSignup ? "Criar novo acesso para corretor" : "Área exclusiva para corretores associados"}
             </p>
 
-            {/* Gold line decoration below */}
-            <div className="flex items-center justify-center gap-3 mt-6">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-accent/50" />
-              <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-accent/50" />
+            {/* Mode switch tabs */}
+            <div className="flex items-center justify-center gap-2 mt-6 p-1 bg-primary/60 border border-accent/15 rounded-lg">
+              <button
+                type="button"
+                onClick={() => { setIsSignup(false); setError(null); }}
+                className={`flex-1 py-1.5 text-xs font-medium tracking-wider uppercase rounded transition-all duration-200 ${
+                  !isSignup ? "bg-accent text-primary font-semibold" : "text-muted hover:text-text-primary"
+                }`}
+              >
+                Entrar
+              </button>
+              <button
+                type="button"
+                onClick={() => { setIsSignup(true); setError(null); }}
+                className={`flex-1 py-1.5 text-xs font-medium tracking-wider uppercase rounded transition-all duration-200 ${
+                  isSignup ? "bg-accent text-primary font-semibold" : "text-muted hover:text-text-primary"
+                }`}
+              >
+                Criar Conta
+              </button>
             </div>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div className="bg-red-950/20 border border-red-500/30 text-red-200 text-xs rounded-lg p-3 text-center tracking-wide font-light">
                 {error}
@@ -115,10 +125,11 @@ export default function LoginPage() {
             )}
             <div className="space-y-1.5">
               <label className="block text-[10px] font-semibold tracking-[0.2em] text-muted uppercase">
-                E-mail
+                E-mail / Login
               </label>
               <input
                 type="email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
@@ -133,6 +144,7 @@ export default function LoginPage() {
               </label>
               <input
                 type="password"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
@@ -141,20 +153,22 @@ export default function LoginPage() {
               />
             </div>
 
-            <div className="flex items-center justify-end">
-              <button
-                type="button"
-                className="text-xs text-accent/70 hover:text-accent transition-colors duration-200 font-light"
-              >
-                Esqueceu a senha?
-              </button>
-            </div>
+            {!isSignup && (
+              <div className="flex items-center justify-end">
+                <button
+                  type="button"
+                  className="text-xs text-accent/70 hover:text-accent transition-colors duration-200 font-light"
+                >
+                  Esqueceu a senha?
+                </button>
+              </div>
+            )}
 
             <button
               type="submit"
               disabled={loading}
               className="w-full bg-accent hover:bg-warm-highlight disabled:opacity-70 text-primary font-semibold text-sm tracking-[0.2em] uppercase
-                py-3.5 rounded-lg transition-all duration-300 hover:shadow-[0_0_24px_rgba(201,151,77,0.4)] mt-2"
+                py-3.5 rounded-lg transition-all duration-300 hover:shadow-[0_0_24px_rgba(201,151,77,0.4)] mt-2 cursor-pointer"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -162,10 +176,10 @@ export default function LoginPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Entrando...
+                  {isSignup ? "Cadastrando..." : "Entrando..."}
                 </span>
               ) : (
-                "Entrar"
+                isSignup ? "Criar Conta & Entrar" : "Entrar"
               )}
             </button>
           </form>
@@ -183,3 +197,4 @@ export default function LoginPage() {
     </main>
   );
 }
+

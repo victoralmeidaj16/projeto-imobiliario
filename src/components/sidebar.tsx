@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import {
@@ -33,10 +34,11 @@ const navItems = [
 export function Sidebar({ onHide }: { onHide?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      await logout();
       router.push("/login");
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
