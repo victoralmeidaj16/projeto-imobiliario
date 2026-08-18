@@ -43,6 +43,8 @@ import {
   Pencil,
   UserCheck,
   Megaphone,
+  CheckCircle2,
+  RotateCcw,
 } from "lucide-react";
 
 const TABS: { id: ContentType; label: string; shortLabel: string; icon: React.ReactNode }[] = [
@@ -235,6 +237,8 @@ export default function ConteudoPage() {
   const [result, setResult] = useState<GeneratedContent | null>(null);
   const [brokerConfig, setBrokerConfig] = useState<BrokerConfig>(DEFAULT_BROKER_CONFIG);
   const [copied, setCopied] = useState(false);
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [generateVisualWithPost, setGenerateVisualWithPost] = useState(false);
 
   // Image generation state
   const [imagePrompt, setImagePrompt] = useState("");
@@ -286,8 +290,21 @@ export default function ConteudoPage() {
       if (!res.ok) throw new Error("API error");
       const data = (await res.json()) as GeneratedContent;
       setResult(data);
+      if (generateVisualWithPost && activeTab !== "autoridade-pessoal") {
+        await handleGenerateImage(
+          undefined,
+          buildImagePrompt(activeTab, data.content, "", formData)
+        );
+      }
     } catch {
-      setResult(CONTENT_MOCKS[activeTab]);
+      const fallback = CONTENT_MOCKS[activeTab];
+      setResult(fallback);
+      if (generateVisualWithPost && activeTab !== "autoridade-pessoal") {
+        await handleGenerateImage(
+          undefined,
+          buildImagePrompt(activeTab, fallback.content, "", formData)
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -344,6 +361,14 @@ export default function ConteudoPage() {
     navigator.clipboard.writeText(result.content).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const handleCopyPrompt = () => {
+    if (!currentPrompt) return;
+    navigator.clipboard.writeText(currentPrompt).then(() => {
+      setCopiedPrompt(true);
+      setTimeout(() => setCopiedPrompt(false), 2000);
     });
   };
 
@@ -426,6 +451,38 @@ export default function ConteudoPage() {
           <div className="h-px bg-gradient-to-r from-accent/40 via-accent/10 to-transparent mt-5" />
         </div>
 
+        <div className="mb-6 grid gap-3 lg:grid-cols-[1fr_auto]">
+          <div className="flex items-center gap-3 rounded-xl border border-accent/15 bg-secondary/70 px-4 py-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-accent/25 bg-accent/10 text-accent">
+              <Sparkles size={14} strokeWidth={1.5} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-medium text-text-primary">Crie em um único fluxo</p>
+              <p className="text-[11px] leading-relaxed text-muted/60">Escolha o formato, descreva o tema e receba a legenda pronta — com visual opcional para baixar.</p>
+            </div>
+          </div>
+          {activeTab !== "autoridade-pessoal" && (
+            <button
+              type="button"
+              role="switch"
+              aria-checked={generateVisualWithPost}
+              onClick={() => setGenerateVisualWithPost((value) => !value)}
+              className={cn(
+                "flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all",
+                generateVisualWithPost ? "border-accent/50 bg-accent/10" : "border-accent/15 bg-secondary/70 hover:border-accent/30"
+              )}
+            >
+              <span className={cn("relative h-5 w-9 rounded-full transition-colors", generateVisualWithPost ? "bg-accent" : "bg-white/10")}>
+                <span className={cn("absolute top-0.5 h-4 w-4 rounded-full bg-[#111] shadow-sm transition-transform", generateVisualWithPost ? "translate-x-[18px]" : "translate-x-0.5")} />
+              </span>
+              <span>
+                <span className="block text-xs font-medium text-text-primary">Post completo</span>
+                <span className="block text-[10px] text-muted/55">Legenda + imagem</span>
+              </span>
+            </button>
+          )}
+        </div>
+
         {/* Tab bar */}
         <div className="flex gap-1 overflow-x-auto pb-2 mb-6 scrollbar-thin">
           {TABS.map((tab) => (
@@ -444,6 +501,21 @@ export default function ConteudoPage() {
               <span>{tab.shortLabel}</span>
             </button>
           ))}
+        </div>
+
+        <div className="mb-6 flex items-center gap-2 overflow-x-auto pb-1 text-[10px] uppercase tracking-[0.16em] text-muted/45">
+          {["Escolha o formato", "Preencha os detalhes", "Gere seu post", "Baixe e publique"].map((step, index) => {
+            const completed = index === 0 || (index === 1 && Boolean(result)) || (index === 2 && Boolean(result)) || (index === 3 && Boolean(generatedImage));
+            return (
+              <div key={step} className="flex shrink-0 items-center gap-2">
+                <span className={cn("flex h-5 w-5 items-center justify-center rounded-full border text-[9px]", completed ? "border-accent/50 bg-accent/10 text-accent" : "border-white/10 text-muted/40")}>
+                  {completed ? <CheckCircle2 size={11} strokeWidth={1.5} /> : index + 1}
+                </span>
+                <span className={completed ? "text-muted/70" : ""}>{step}</span>
+                {index < 3 && <span className="mx-1 h-px w-6 bg-white/10" />}
+              </div>
+            );
+          })}
         </div>
 
         {/* Main area */}
@@ -476,14 +548,16 @@ export default function ConteudoPage() {
                   Conteúdo Gerado
                 </p>
                 {result && (
-                  <button
-                    type="button"
-                    onClick={handleCopy}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-accent/8 text-accent text-xs hover:bg-accent/15 transition-colors border border-accent/20"
-                  >
-                    {copied ? <Check size={11} strokeWidth={2} /> : <Copy size={11} strokeWidth={1.5} />}
-                    {copied ? "Copiado!" : "Copiar"}
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={handleCopy}
+                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-accent/8 text-accent text-xs hover:bg-accent/15 transition-colors border border-accent/20"
+                    >
+                      {copied ? <Check size={11} strokeWidth={2} /> : <Copy size={11} strokeWidth={1.5} />}
+                      {copied ? "Copiado!" : "Copiar legenda"}
+                    </button>
+                  </div>
                 )}
               </div>
 
@@ -557,14 +631,24 @@ export default function ConteudoPage() {
                           <label className="text-[10px] tracking-[0.2em] uppercase text-muted/60 font-medium">
                             Prompt de Imagem
                           </label>
-                          <button
-                            type="button"
-                            onClick={() => { setEditingPrompt(!editingPrompt); if (!imagePrompt) setImagePrompt(currentPrompt); }}
-                            className="flex items-center gap-1 text-[10px] text-accent/60 hover:text-accent transition-colors"
-                          >
-                            <Pencil size={10} strokeWidth={1.5} />
-                            {editingPrompt ? "Fechar" : "Editar"}
-                          </button>
+                          <div className="flex items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={handleCopyPrompt}
+                              className="flex items-center gap-1 text-[10px] text-accent/60 hover:text-accent transition-colors"
+                            >
+                              {copiedPrompt ? <Check size={10} strokeWidth={2} /> : <Copy size={10} strokeWidth={1.5} />}
+                              {copiedPrompt ? "Copiado" : "Copiar"}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => { setEditingPrompt(!editingPrompt); if (!imagePrompt) setImagePrompt(currentPrompt); }}
+                              className="flex items-center gap-1 text-[10px] text-accent/60 hover:text-accent transition-colors"
+                            >
+                              <Pencil size={10} strokeWidth={1.5} />
+                              {editingPrompt ? "Fechar" : "Editar"}
+                            </button>
+                          </div>
                         </div>
 
                         {editingPrompt ? (
@@ -645,6 +729,18 @@ export default function ConteudoPage() {
                         <Download size={13} strokeWidth={1.5} />
                         Baixar Imagem
                       </button>
+
+                      <div className="flex items-center justify-between rounded-lg border border-accent/10 bg-white/[0.02] px-3 py-2.5">
+                        <span className="text-[11px] text-muted/55">Visual pronto para o seu feed</span>
+                        <button
+                          type="button"
+                          onClick={() => handleGenerateImage()}
+                          disabled={isGeneratingImage}
+                          className="flex items-center gap-1 text-[11px] text-accent/70 transition-colors hover:text-accent disabled:opacity-40"
+                        >
+                          <RotateCcw size={11} strokeWidth={1.5} /> Variar imagem
+                        </button>
+                      </div>
                       <a ref={imageRef} className="hidden" />
                     </div>
                   )}
