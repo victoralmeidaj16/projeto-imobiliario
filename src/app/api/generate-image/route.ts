@@ -148,7 +148,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<GenerateImage
     return NextResponse.json({ mock: true, error: "GOOGLE_AI_API_KEY não configurada no .env.local" });
   }
 
-  const configuredModel = process.env.GEMINI_IMAGE_MODEL?.trim() || "imagen-3.0-generate-002";
+  const configuredModel = process.env.GEMINI_IMAGE_MODEL?.trim() || "gemini-2.5-flash";
 
   try {
     if (configuredModel.includes("imagen")) {
@@ -157,7 +157,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<GenerateImage
         return NextResponse.json(result);
       } catch (err) {
         console.warn("Imagen 3 API fallback to Gemini Multimodal:", err);
-        const result = await generateWithGeminiMultimodal(apiKey, prompt, brokerPhotos, systemPrompt, "gemini-2.0-flash");
+        const result = await generateWithGeminiMultimodal(apiKey, prompt, brokerPhotos, systemPrompt, "gemini-2.5-flash");
         return NextResponse.json(result);
       }
     } else {
